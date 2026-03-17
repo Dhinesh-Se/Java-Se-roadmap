@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java System Design & Design Patterns — Complete Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3e;
+    --accent1: #00e5ff;
+    --accent2: #ff6b35;
+    --accent3: #7c4dff;
+    --accent4: #00e676;
+    --accent5: #ffd740;
+    --accent6: #ff4081;
+    --text: #e8e8f0;
+    --muted: #8080a0;
+    --glow1: rgba(0,229,255,0.15);
+    --glow2: rgba(124,77,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    padding: 80px 0 60px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent1), var(--accent3), transparent);
+  }
+
+  .header-tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--accent1);
+    text-transform: uppercase;
+    border: 1px solid var(--accent1);
+    padding: 6px 16px;
+    margin-bottom: 24px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  h1 .line1 { display: block; color: var(--text); }
+  h1 .line2 {
+    display: block;
+    background: linear-gradient(90deg, var(--accent1), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 400;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  /* PHASE */
+  .phase {
+    margin-top: 64px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .phase-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 6px 14px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .phase-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .phase-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    gap: 16px;
+  }
+  .grid-2 { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 2px;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+
+  .card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+  }
+
+  /* COLOR VARIANTS */
+  .c1 { --cc: var(--accent1); }
+  .c2 { --cc: var(--accent2); }
+  .c3 { --cc: var(--accent3); }
+  .c4 { --cc: var(--accent4); }
+  .c5 { --cc: var(--accent5); }
+  .c6 { --cc: var(--accent6); }
+
+  .card.c1::before { background: var(--accent1); }
+  .card.c2::before { background: var(--accent2); }
+  .card.c3::before { background: var(--accent3); }
+  .card.c4::before { background: var(--accent4); }
+  .card.c5::before { background: var(--accent5); }
+  .card.c6::before { background: var(--accent6); }
+
+  .card.c1:hover { border-color: var(--accent1); box-shadow: 0 12px 40px rgba(0,229,255,0.15); }
+  .card.c2:hover { border-color: var(--accent2); box-shadow: 0 12px 40px rgba(255,107,53,0.15); }
+  .card.c3:hover { border-color: var(--accent3); box-shadow: 0 12px 40px rgba(124,77,255,0.15); }
+  .card.c4:hover { border-color: var(--accent4); box-shadow: 0 12px 40px rgba(0,230,118,0.15); }
+  .card.c5:hover { border-color: var(--accent5); box-shadow: 0 12px 40px rgba(255,215,64,0.15); }
+  .card.c6:hover { border-color: var(--accent6); box-shadow: 0 12px 40px rgba(255,64,129,0.15); }
+
+  .phase-num.c1 { background: rgba(0,229,255,0.1); color: var(--accent1); border: 1px solid rgba(0,229,255,0.3); }
+  .phase-num.c2 { background: rgba(255,107,53,0.1); color: var(--accent2); border: 1px solid rgba(255,107,53,0.3); }
+  .phase-num.c3 { background: rgba(124,77,255,0.1); color: var(--accent3); border: 1px solid rgba(124,77,255,0.3); }
+  .phase-num.c4 { background: rgba(0,230,118,0.1); color: var(--accent4); border: 1px solid rgba(0,230,118,0.3); }
+  .phase-num.c5 { background: rgba(255,215,64,0.1); color: var(--accent5); border: 1px solid rgba(255,215,64,0.3); }
+  .phase-num.c6 { background: rgba(255,64,129,0.1); color: var(--accent6); border: 1px solid rgba(255,64,129,0.3); }
+
+  .tag.c1 { color: var(--accent1); border-color: rgba(0,229,255,0.35); background: rgba(0,229,255,0.07); }
+  .tag.c2 { color: var(--accent2); border-color: rgba(255,107,53,0.35); background: rgba(255,107,53,0.07); }
+  .tag.c3 { color: var(--accent3); border-color: rgba(124,77,255,0.35); background: rgba(124,77,255,0.07); }
+  .tag.c4 { color: var(--accent4); border-color: rgba(0,230,118,0.35); background: rgba(0,230,118,0.07); }
+  .tag.c5 { color: var(--accent5); border-color: rgba(255,215,64,0.35); background: rgba(255,215,64,0.07); }
+  .tag.c6 { color: var(--accent6); border-color: rgba(255,64,129,0.35); background: rgba(255,64,129,0.07); }
+
+  /* TIMELINE CONNECTOR */
+  .connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0;
+    gap: 8px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+  .connector::before, .connector::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border));
+  }
+  .connector::after {
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  /* PATTERNS SPECIAL SECTION */
+  .patterns-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .patterns-grid { grid-template-columns: 1fr 1fr; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .patterns-grid { grid-template-columns: 1fr; }
+  }
+
+  .pattern-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    transition: all 0.2s;
+  }
+
+  .pattern-card:hover {
+    border-color: var(--accent3);
+    background: rgba(124,77,255,0.08);
+  }
+
+  .pattern-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .pattern-type {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .pattern-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent1), var(--accent3), var(--accent2));
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent1);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 8px var(--accent1);
+  }
+
+  .tl-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+  }
+
+  .tl-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* DURATION BADGE */
+  .duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-top: 10px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 48px 0 32px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .phase:nth-child(1) { animation-delay: 0.1s; }
+  .phase:nth-child(2) { animation-delay: 0.2s; }
+  .phase:nth-child(3) { animation-delay: 0.3s; }
+  .phase:nth-child(4) { animation-delay: 0.4s; }
+  .phase:nth-child(5) { animation-delay: 0.5s; }
+  .phase:nth-child(6) { animation-delay: 0.6s; }
+
+  /* TOTAL TIMELINE */
+  .total-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 32px;
+    margin-top: 48px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .total-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .total-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent1), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .progress-track {
+    flex: 1;
+    min-width: 200px;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent3), var(--accent2));
+    animation: progressGrow 1.5s 0.5s ease both;
+  }
+
+  @keyframes progressGrow {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-tag">Complete Learning Roadmap</div>
+    <h1>
+      <span class="line1">Java System Design &</span>
+      <span class="line2">Design Patterns</span>
+    </h1>
+    <p class="subtitle">A structured path from Java fundamentals to distributed system architecture</p>
+  </header>
+
+  <!-- TOTAL -->
+  <div class="total-bar">
+    <div>
+      <div class="total-label">Estimated Duration</div>
+      <div class="total-value">6–12 months</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill"></div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);text-align:right;">
+      6 Phases · 23 Topics<br>Beginner → Architect
+    </div>
+  </div>
+
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c1">Phase 01</div>
+      <div class="phase-title">Java Core Mastery</div>
+      <div class="phase-line"></div>
+      <div class="duration">⏱ 3–4 weeks</div>
+    </div>
+    <div class="grid grid-2">
+
+      <div class="card c1">
+        <div class="card-icon">☕</div>
+        <div class="card-title">OOP Fundamentals</div>
+        <div class="card-desc">The bedrock of all Java design. Without solid OOP, no pattern will make sense.</div>
+        <div class="tags">
+          <span class="tag c1">Encapsulation</span>
+          <span class="tag c1">Inheritance</span>
+          <span class="tag c1">Polymorphism</span>
+          <span class="tag c1">Abstraction</span>
+          <span class="tag c1">Interfaces</span>
+        </div>
+      </div>
+
+      <div class="card c1">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">SOLID Principles</div>
+        <div class="card-desc">5 principles that form the philosophical foundation of every design pattern.</div>
+        <div class="tags">
+          <span class="tag c1">Single Responsibility</span>
+          <span class="tag c1">Open/Closed</span>
+          <span class="tag c1">Liskov Substitution</span>
+          <span class="tag c1">Interface Segregation</span>
+          <span class="tag c1">Dependency Inversion</span>
+        </div>
+      </div>
+
+      <div class="card c1">
+        <div class="card-icon">⚙️</div>
+        <div class="card-title">Java Collections & Generics</div>
+        <div class="card-desc">Deep understanding of data structures used inside patterns and systems.</div>
+        <div class="tags">
+          <span class="tag c1">List, Set, Map</span>
+          <span class="tag c1">Queue/Deque</span>
+          <span class="tag c1">Generics</span>
+          <span class="tag c1">Comparable/Comparator</span>
+        </div>
+      </div>
+
+      <div class="card c1">
+        <div class="card-icon">🔀</div>
+        <div class="card-title">Concurrency Basics</div>
+        <div class="card-desc">Threads, synchronization & Java memory model — crucial for system design.</div>
+        <div class="tags">
+          <span class="tag c1">Threads & Runnable</span>
+          <span class="tag c1">synchronized</span>
+          <span class="tag c1">volatile</span>
+          <span class="tag c1">ExecutorService</span>
+          <span class="tag c1">CompletableFuture</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector">↓ PROCEED TO DESIGN PATTERNS</div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c3">Phase 02</div>
+      <div class="phase-title">GoF Design Patterns (23 Patterns)</div>
+      <div class="phase-line"></div>
+      <div class="duration">⏱ 5–7 weeks</div>
+    </div>
+
+    <!-- CREATIONAL -->
+    <div style="margin-bottom:8px;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:2px;color:var(--accent3);">▸ CREATIONAL — Object Creation Mechanisms</div>
+    <div class="patterns-grid" style="margin-bottom:24px;">
+      <div class="pattern-card">
+        <div class="pattern-name">Singleton</div>
+        <div class="pattern-type">Creational</div>
+        <div class="pattern-desc">One instance, global access point. Thread-safe with double-checked locking or enum.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-name">Factory Method</div>
+        <div class="pattern-type">Creational</div>
+        <div class="pattern-desc">Delegate instantiation to subclasses. Decouples creation from usage.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-name">Abstract Factory</div>
+        <div class="pattern-type">Creational</div>
+        <div class="pattern-desc">Create families of related objects without specifying concrete classes.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-name">Builder</div>
+        <div class="pattern-type">Creational</div>
+        <div class="pattern-desc">Construct complex objects step by step. Fluent API in Java (Lombok @Builder).</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-name">Prototype</div>
+        <div class="pattern-type">Creational</div>
+        <div class="pattern-desc">Clone objects instead of new instantiation. Deep vs shallow copy.</div>
+      </div>
+      <div class="pattern-card">
+        <div class="pattern-name">Object Pool</div>
+        <div class="pattern-type">Creational</div>
+        <div class="pattern-desc">Reuse expensive objects (connections, threads). Used in DB connection pools.</div>
+      </div>
+    </div>
+
+    <!-- STRUCTURAL -->
+    <div style="margin-bottom:8px;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:2px;color:var(--accent2);">▸ STRUCTURAL — Class & Object Composition</div>
+    <div class="patterns-grid" style="margin-bottom:24px;">
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Adapter</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Translate one interface to another. Bridging legacy and new code.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Bridge</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Separate abstraction from implementation so both can vary independently.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Composite</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Tree structures where individual objects and groups are treated uniformly.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Decorator</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Add behavior to objects dynamically. Java I/O streams are a prime example.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Facade</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Simple interface to a complex subsystem. Used in service layers.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Flyweight</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Share state among many fine-grained objects. String pool in Java.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(255,107,53,0.2);">
+        <div class="pattern-name">Proxy</div>
+        <div class="pattern-type">Structural</div>
+        <div class="pattern-desc">Surrogate controls access. Lazy loading, caching, logging, Spring AOP.</div>
+      </div>
+    </div>
+
+    <!-- BEHAVIORAL -->
+    <div style="margin-bottom:8px;font-family:'Space Mono',monospace;font-size:0.7rem;letter-spacing:2px;color:var(--accent4);">▸ BEHAVIORAL — Object Communication & Responsibilities</div>
+    <div class="patterns-grid">
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Observer</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Notify dependents of state changes. Events, Kafka consumers, Spring Events.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Strategy</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Define a family of algorithms, make them interchangeable at runtime.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Command</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Encapsulate requests as objects. Enables undo/redo, queuing, macros.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Template Method</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Define skeleton in base class, let subclasses fill in specific steps.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Iterator</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Sequential access without exposing underlying structure. Java Iterable.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">State</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Object behavior changes with internal state. FSM implementation.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Chain of Responsibility</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Pass requests along handler chain. Filter chains in Servlet/Spring.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Mediator</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Centralize communication between objects. Message brokers, chat rooms.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Memento</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Save/restore object state without exposing internals. Version history.</div>
+      </div>
+      <div class="pattern-card" style="border-color:rgba(0,230,118,0.2);">
+        <div class="pattern-name">Visitor</div>
+        <div class="pattern-type">Behavioral</div>
+        <div class="pattern-desc">Add operations to object structure without modifying classes. AST traversal.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector">↓ ADVANCE TO ARCHITECTURAL PATTERNS</div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c2">Phase 03</div>
+      <div class="phase-title">Architectural & Enterprise Patterns</div>
+      <div class="phase-line"></div>
+      <div class="duration">⏱ 4–5 weeks</div>
+    </div>
+    <div class="grid grid-2">
+
+      <div class="card c2">
+        <div class="card-icon">🏗️</div>
+        <div class="card-title">Layered / N-Tier Architecture</div>
+        <div class="card-desc">Separate concerns into Presentation, Business, Data Access layers. Foundation of most Java apps.</div>
+        <div class="tags">
+          <span class="tag c2">Controller</span>
+          <span class="tag c2">Service Layer</span>
+          <span class="tag c2">Repository/DAO</span>
+          <span class="tag c2">Spring MVC</span>
+        </div>
+      </div>
+
+      <div class="card c2">
+        <div class="card-icon">🧱</div>
+        <div class="card-title">MVC / MVP / MVVM</div>
+        <div class="card-desc">Separate UI logic from business logic. MVC is dominant in Spring and Java EE.</div>
+        <div class="tags">
+          <span class="tag c2">Model</span>
+          <span class="tag c2">View</span>
+          <span class="tag c2">Controller</span>
+          <span class="tag c2">Presenter</span>
+          <span class="tag c2">ViewModel</span>
+        </div>
+      </div>
+
+      <div class="card c2">
+        <div class="card-icon">🗃️</div>
+        <div class="card-title">Repository & DAO Pattern</div>
+        <div class="card-desc">Abstract data persistence. Use interfaces for testability. Spring Data JPA automates this.</div>
+        <div class="tags">
+          <span class="tag c2">JPA</span>
+          <span class="tag c2">Hibernate</span>
+          <span class="tag c2">Unit of Work</span>
+          <span class="tag c2">Spring Data</span>
+        </div>
+      </div>
+
+      <div class="card c2">
+        <div class="card-icon">🔧</div>
+        <div class="card-title">Dependency Injection / IoC</div>
+        <div class="card-desc">Invert control — wire dependencies externally. Core of Spring Framework.</div>
+        <div class="tags">
+          <span class="tag c2">Spring IoC Container</span>
+          <span class="tag c2">@Autowired</span>
+          <span class="tag c2">@Bean</span>
+          <span class="tag c2">Constructor Injection</span>
+        </div>
+      </div>
+
+      <div class="card c2">
+        <div class="card-icon">📬</div>
+        <div class="card-title">Event-Driven Architecture</div>
+        <div class="card-desc">Components communicate via events, not direct calls. Loose coupling for scale.</div>
+        <div class="tags">
+          <span class="tag c2">ApplicationEvent</span>
+          <span class="tag c2">Kafka</span>
+          <span class="tag c2">RabbitMQ</span>
+          <span class="tag c2">Async Processing</span>
+        </div>
+      </div>
+
+      <div class="card c2">
+        <div class="card-icon">🌀</div>
+        <div class="card-title">CQRS & Event Sourcing</div>
+        <div class="card-desc">Separate read/write models. Store state as a sequence of events, not current state.</div>
+        <div class="tags">
+          <span class="tag c2">Command</span>
+          <span class="tag c2">Query</span>
+          <span class="tag c2">Event Store</span>
+          <span class="tag c2">Axon Framework</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector">↓ SCALE TO DISTRIBUTED SYSTEMS</div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c4">Phase 04</div>
+      <div class="phase-title">System Design Fundamentals</div>
+      <div class="phase-line"></div>
+      <div class="duration">⏱ 5–6 weeks</div>
+    </div>
+    <div class="grid grid-2">
+
+      <div class="card c4">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title">Scalability Concepts</div>
+        <div class="card-desc">Design systems that grow horizontally and vertically without breaking.</div>
+        <div class="tags">
+          <span class="tag c4">Horizontal Scaling</span>
+          <span class="tag c4">Load Balancing</span>
+          <span class="tag c4">Sharding</span>
+          <span class="tag c4">Replication</span>
+          <span class="tag c4">Partitioning</span>
+        </div>
+      </div>
+
+      <div class="card c4">
+        <div class="card-icon">🗄️</div>
+        <div class="card-title">Database Design & Storage</div>
+        <div class="card-desc">SQL vs NoSQL trade-offs, indexing strategies, normalization, and query optimization.</div>
+        <div class="tags">
+          <span class="tag c4">RDBMS</span>
+          <span class="tag c4">NoSQL (Mongo, Cassandra)</span>
+          <span class="tag c4">Indexing</span>
+          <span class="tag c4">ACID vs BASE</span>
+          <span class="tag c4">CAP Theorem</span>
+        </div>
+      </div>
+
+      <div class="card c4">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Caching Strategies</div>
+        <div class="card-desc">Reduce latency, reduce DB load. Know when to cache and what to invalidate.</div>
+        <div class="tags">
+          <span class="tag c4">Redis</span>
+          <span class="tag c4">Memcached</span>
+          <span class="tag c4">Cache-Aside</span>
+          <span class="tag c4">Write-Through</span>
+          <span class="tag c4">TTL & Eviction</span>
+        </div>
+      </div>
+
+      <div class="card c4">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">API Design (REST & gRPC)</div>
+        <div class="card-desc">Build APIs that are intuitive, versioned, and performant. REST is dominant in Java microservices.</div>
+        <div class="tags">
+          <span class="tag c4">REST Principles</span>
+          <span class="tag c4">gRPC / Protobuf</span>
+          <span class="tag c4">OpenAPI/Swagger</span>
+          <span class="tag c4">Rate Limiting</span>
+          <span class="tag c4">Pagination</span>
+        </div>
+      </div>
+
+      <div class="card c4">
+        <div class="card-icon">📨</div>
+        <div class="card-title">Message Queues & Streaming</div>
+        <div class="card-desc">Asynchronous communication between services. The backbone of scalable systems.</div>
+        <div class="tags">
+          <span class="tag c4">Apache Kafka</span>
+          <span class="tag c4">RabbitMQ</span>
+          <span class="tag c4">Topics & Partitions</span>
+          <span class="tag c4">Consumer Groups</span>
+          <span class="tag c4">Backpressure</span>
+        </div>
+      </div>
+
+      <div class="card c4">
+        <div class="card-icon">🔒</div>
+        <div class="card-title">Security in Systems</div>
+        <div class="card-desc">Authentication, authorization, and data protection at scale.</div>
+        <div class="tags">
+          <span class="tag c4">OAuth2 / JWT</span>
+          <span class="tag c4">Spring Security</span>
+          <span class="tag c4">TLS/HTTPS</span>
+          <span class="tag c4">RBAC</span>
+          <span class="tag c4">Secret Management</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector">↓ BUILD MICROSERVICES</div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c5">Phase 05</div>
+      <div class="phase-title">Microservices & Cloud Architecture</div>
+      <div class="phase-line"></div>
+      <div class="duration">⏱ 5–6 weeks</div>
+    </div>
+    <div class="grid grid-2">
+
+      <div class="card c5">
+        <div class="card-icon">🧩</div>
+        <div class="card-title">Microservices Patterns</div>
+        <div class="card-desc">Decompose monoliths into independently deployable services. Master the key patterns.</div>
+        <div class="tags">
+          <span class="tag c5">Strangler Fig</span>
+          <span class="tag c5">Sidecar</span>
+          <span class="tag c5">Saga</span>
+          <span class="tag c5">API Gateway</span>
+          <span class="tag c5">BFF</span>
+          <span class="tag c5">Service Mesh</span>
+        </div>
+      </div>
+
+      <div class="card c5">
+        <div class="card-icon">🐳</div>
+        <div class="card-title">Containerization & Orchestration</div>
+        <div class="card-desc">Package Java apps into containers and orchestrate them at scale.</div>
+        <div class="tags">
+          <span class="tag c5">Docker</span>
+          <span class="tag c5">Kubernetes</span>
+          <span class="tag c5">Helm</span>
+          <span class="tag c5">Service Discovery</span>
+          <span class="tag c5">Istio</span>
+        </div>
+      </div>
+
+      <div class="card c5">
+        <div class="card-icon">🌱</div>
+        <div class="card-title">Spring Boot & Spring Cloud</div>
+        <div class="card-desc">The Java standard for microservices. Spring Cloud solves distributed systems problems.</div>
+        <div class="tags">
+          <span class="tag c5">Spring Boot</span>
+          <span class="tag c5">Eureka (Discovery)</span>
+          <span class="tag c5">Feign Client</span>
+          <span class="tag c5">Config Server</span>
+          <span class="tag c5">Sleuth/Zipkin</span>
+        </div>
+      </div>
+
+      <div class="card c5">
+        <div class="card-icon">🛡️</div>
+        <div class="card-title">Resilience Patterns</div>
+        <div class="card-desc">Design for failure. Systems that degrade gracefully under stress.</div>
+        <div class="tags">
+          <span class="tag c5">Circuit Breaker</span>
+          <span class="tag c5">Retry + Backoff</span>
+          <span class="tag c5">Bulkhead</span>
+          <span class="tag c5">Timeout</span>
+          <span class="tag c5">Resilience4j</span>
+        </div>
+      </div>
+
+      <div class="card c5">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Observability</div>
+        <div class="card-desc">Monitor, trace, and log distributed Java services to understand system behavior.</div>
+        <div class="tags">
+          <span class="tag c5">Prometheus</span>
+          <span class="tag c5">Grafana</span>
+          <span class="tag c5">ELK Stack</span>
+          <span class="tag c5">Distributed Tracing</span>
+          <span class="tag c5">Micrometer</span>
+        </div>
+      </div>
+
+      <div class="card c5">
+        <div class="card-icon">☁️</div>
+        <div class="card-title">Cloud Platforms</div>
+        <div class="card-desc">Deploy and operate Java systems on cloud infrastructure.</div>
+        <div class="tags">
+          <span class="tag c5">AWS (ECS/EKS/Lambda)</span>
+          <span class="tag c5">GCP</span>
+          <span class="tag c5">Azure</span>
+          <span class="tag c5">Serverless</span>
+          <span class="tag c5">CI/CD</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="connector">↓ THINK LIKE AN ARCHITECT</div>
+
+  <!-- PHASE 6 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c6">Phase 06</div>
+      <div class="phase-title">System Design Interviews & Real Systems</div>
+      <div class="phase-line"></div>
+      <div class="duration">⏱ 4–6 weeks</div>
+    </div>
+    <div class="grid grid-2">
+
+      <div class="card c6">
+        <div class="card-icon">🏦</div>
+        <div class="card-title">Classic System Designs</div>
+        <div class="card-desc">Practice designing the systems every senior engineer is expected to know cold.</div>
+        <div class="tags">
+          <span class="tag c6">URL Shortener</span>
+          <span class="tag c6">Twitter/Feed</span>
+          <span class="tag c6">WhatsApp</span>
+          <span class="tag c6">YouTube</span>
+          <span class="tag c6">Rate Limiter</span>
+          <span class="tag c6">Search Engine</span>
+        </div>
+      </div>
+
+      <div class="card c6">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Estimation & Capacity Planning</div>
+        <div class="card-desc">Back-of-envelope math to validate architectural choices. Critical in interviews.</div>
+        <div class="tags">
+          <span class="tag c6">QPS Estimation</span>
+          <span class="tag c6">Storage Sizing</span>
+          <span class="tag c6">Bandwidth</span>
+          <span class="tag c6">Latency Numbers</span>
+        </div>
+      </div>
+
+      <div class="card c6">
+        <div class="card-icon">🔬</div>
+        <div class="card-title">Advanced Distributed Concepts</div>
+        <div class="card-desc">Deep theory behind distributed systems that separates seniors from juniors.</div>
+        <div class="tags">
+          <span class="tag c6">Consistent Hashing</span>
+          <span class="tag c6">Paxos / Raft</span>
+          <span class="tag c6">Vector Clocks</span>
+          <span class="tag c6">Gossip Protocol</span>
+          <span class="tag c6">Two-Phase Commit</span>
+        </div>
+      </div>
+
+      <div class="card c6">
+        <div class="card-icon">📐</div>
+        <div class="card-title">Architecture Decision Records</div>
+        <div class="card-desc">Document your architectural decisions and trade-offs. The mark of a mature engineer.</div>
+        <div class="tags">
+          <span class="tag c6">ADR Format</span>
+          <span class="tag c6">Trade-off Analysis</span>
+          <span class="tag c6">C4 Model</span>
+          <span class="tag c6">Architecture Reviews</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- STUDY RESOURCES -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num c1">Resources</div>
+      <div class="phase-title">Essential Books & Tools</div>
+      <div class="phase-line"></div>
+    </div>
+    <div class="grid grid-3">
+      <div class="card c1" style="padding:18px;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--accent1);margin-bottom:8px;">📚 BOOKS</div>
+        <div class="timeline" style="padding-left:24px;">
+          <div class="tl-item"><div class="tl-title">Design Patterns — GoF</div><div class="tl-desc">The original 23 patterns bible</div></div>
+          <div class="tl-item"><div class="tl-title">Head First Design Patterns</div><div class="tl-desc">Best visual learner intro</div></div>
+          <div class="tl-item"><div class="tl-title">Designing Data-Intensive Apps</div><div class="tl-desc">Kleppmann — system design bible</div></div>
+          <div class="tl-item"><div class="tl-title">Clean Architecture — Martin</div><div class="tl-desc">Architectural principles</div></div>
+          <div class="tl-item"><div class="tl-title">System Design Interview — Xu</div><div class="tl-desc">Interview-focused guide</div></div>
+        </div>
+      </div>
+
+      <div class="card c3" style="padding:18px;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--accent3);margin-bottom:8px;">🛠️ PRACTICE TOOLS</div>
+        <div class="timeline" style="padding-left:24px;">
+          <div class="tl-item"><div class="tl-title">LeetCode / NeetCode</div><div class="tl-desc">Coding + data structure problems</div></div>
+          <div class="tl-item"><div class="tl-title">Excalidraw</div><div class="tl-desc">Sketch architecture diagrams</div></div>
+          <div class="tl-item"><div class="tl-title">GitHub — DesignPatterns repos</div><div class="tl-desc">Java implementation examples</div></div>
+          <div class="tl-item"><div class="tl-title">ByteByteGo</div><div class="tl-desc">Visual system design content</div></div>
+          <div class="tl-item"><div class="tl-title">Refactoring.Guru</div><div class="tl-desc">Pattern catalog with Java code</div></div>
+        </div>
+      </div>
+
+      <div class="card c4" style="padding:18px;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:1px;color:var(--accent4);margin-bottom:8px;">⚡ JAVA ECOSYSTEM</div>
+        <div class="timeline" style="padding-left:24px;">
+          <div class="tl-item"><div class="tl-title">Spring Boot + Spring Cloud</div><div class="tl-desc">Java microservices standard</div></div>
+          <div class="tl-item"><div class="tl-title">Resilience4j</div><div class="tl-desc">Circuit breaker & resilience</div></div>
+          <div class="tl-item"><div class="tl-title">Apache Kafka + JVM</div><div class="tl-desc">Event streaming in Java</div></div>
+          <div class="tl-item"><div class="tl-title">Quarkus / Micronaut</div><div class="tl-desc">Cloud-native Java alternatives</div></div>
+          <div class="tl-item"><div class="tl-title">Project Reactor / RxJava</div><div class="tl-desc">Reactive programming in Java</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    JAVA SYSTEM DESIGN ROADMAP &nbsp;·&nbsp; BEGINNER → ARCHITECT &nbsp;·&nbsp; 6–12 MONTHS
+  </footer>
+
+</div>
+</body>
+</html>
